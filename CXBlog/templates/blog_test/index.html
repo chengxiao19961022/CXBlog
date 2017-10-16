@@ -1,0 +1,364 @@
+{% extends "blog_test/base.html" %}
+{% load staticfiles %}
+{% load blog_tags %}
+{#{% load markdown_deux_tags %}#}
+{% block title %}My Blog{% endblock %}
+
+{#<!DOCTYPE HTML>#}
+{#<!--#}
+{#	Editorial by HTML5 UP#}
+{#	html5up.net | @ajlkn#}
+{#	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)#}
+{#-->#}
+{#<html>#}
+{#	<head>#}
+{#		<title>Editorial by HTML5 UP</title>#}
+{#		<meta charset="utf-8" />#}
+{#		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />#}
+{#		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->#}
+{#		<link rel="stylesheet" href="{% static "blog_test/css/main.css" %}" />#}
+{#		<!--[if lte IE 9]><link rel="stylesheet" href="{% static "blog_test/css/ie8.css" %}" /><![endif]-->#}
+{#		<!--[if lte IE 8]><link rel="stylesheet" href="{% static "blog_test/css/ie9.css" %}" /><![endif]-->#}
+{#	</head>#}
+{#	<body>#}
+{##}
+{#		<!-- Wrapper -->#}
+{#			<div id="wrapper">#}
+{##}
+{#				<!-- Main -->#}
+{#					<div id="main">#}
+{#						<div class="inner">#}
+{##}
+{#							<!-- Header -->#}
+{#								<header id="header">#}
+{#									<a href="index.html" class="logo"><strong>Editorial</strong> by HTML5 UP</a>#}
+{#									<ul class="icons">#}
+{#										<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>#}
+{#										<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>#}
+{#										<li><a href="#" class="icon fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>#}
+{#										<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>#}
+{#										<li><a href="#" class="icon fa-medium"><span class="label">Medium</span></a></li>#}
+{#									</ul>#}
+{#								</header>#}
+                            {% block content %}
+{#                                <a href="#"><h1>haha</h1></a>#}
+							<!-- Banner 文章列表-->
+                                <br/>
+                            {% for post in posts %}
+                                <div class="box" style="border: 2px solid #f56a6a;">
+
+								<section >
+									<div class="content">
+                                        <ul class="icons">
+                                            <b class="icon fa-calendar" style="float: right">&#8197;{{ post.publish }}</b>
+                                            <b class="icon fa-pencil">&#8197;{{ post.author }}</b>
+                                        </ul>
+										<header>
+
+                                                <a href="{{ post.get_absolute_url }}">
+                                                   <h1> {{ post.title }}</h1>
+                                                </a>
+
+{#											<p>A free and fully responsive site template</p>#}
+										</header>
+
+{#										<p class="icons">#}
+{#                                            <font color="#a9a9a9"><b class="icon fa-tag"></b></font>#}
+{#                                            {% for tag in post.tags.all %}#}
+{#                                                <a href="{% url "CXBlog:post_list_by_tag" tag.slug %}">#}
+{#                                                    {{ tag.name }}#}
+{#                                                </a>#}
+{#                                                {% if not forloop.last %}, {% endif %}#}
+{#                                            {% endfor %}#}
+{#                                        </p>#}
+
+{#                                        <p class="date">#}
+{#                                            Published {{ post.publish }} by {{ post.author }}#}
+{#                                        </p>#}
+                                    <div class="box" style="border: 1px solid lightgray;position: relative;left: -8px;right: 0px;">
+                                        {{ post.body|markdown|truncatewords_html:30 }}
+                                    </div>
+
+
+                                        <p style="text-decoration: none">
+                                            <font color="#a9a9a9"><a href="{% url "CXBlog:blog_test" %}" class="icon fa-tag"></a></font>
+
+                                            {% for tag in post.tags.all %}
+{#                                                    <a class="button icon fa-tag " href="{% url "CXBlog:post_list_by_tag" tag.slug %}">#}
+{#                                                      {{ tag.name }}#}
+{#                                                    </a>#}
+                                                    <a class="icon" href="{% url "CXBlog:post_list_by_tag" tag.slug %}">
+                                                        <font color="black">{{ tag.name }}</font>
+                                                    </a>
+                                                {% if not forloop.last %}<font color="black">| </font>{% endif %}
+                                            {% endfor %}
+
+                                                <span style="float: right;position: relative;bottom: 10px">
+                                                    <a href="{{ post.get_absolute_url }}" class="button special small " >Learn More>></a>
+                                                </span>
+
+
+                                        </p>
+									</div>
+
+{#									<span class="image object">#}
+{#										<img src="{% static "blog_test/images/pic10.jpg" %}" alt="" />#}
+{#									</span>#}
+
+								</section>
+                                </div>
+                            {% endfor %}
+{#                            {% include "CXBlog/post/pagination.html" with page=posts %}#}
+
+                                <div class="align-right">
+                                    <ul class="pagination">
+
+                                        {% if posts.has_previous %}
+                                            <li><a href="?page={{ posts.previous_page_number }}" class="button">Prev</a></li>
+                                            {% else %}
+                                            <li><span class="button disabled">Prev</span>
+                                        {% endif %}
+                                {#        <span class="current">#}
+                                {#          Page {{ posts.number }} of {{ posts.paginator.num_pages }}.#}
+                                {#        </span>#}
+                                            {% for pg in posts.paginator.num_pages|list %}
+                                                {% circle_page posts.number pg ""%}
+                                            {% endfor %}
+                                          {% if posts.has_next %}
+                                              <li><a class="button" href="?page={{ posts.next_page_number }}">Next</a></li>
+                                              {% else %}
+                                              <li><span class="button disabled">Next</span>
+                                          {% endif %}
+
+                                    </ul>
+                                </div>
+
+                                <div class="go-top">
+                                    <div class="arrow"></div>
+                                    <div class="stick"></div>
+                                </div>
+
+                                <div>
+                                    <a href="{% url "CXBlog:blog_test" %}" class="icon fa-home" title="主页"
+                                       style="position: fixed;
+                                              bottom: 50px;
+                                              left: 94%;
+                                              margin-left: 40px;
+                                              color: black;
+                                              border:2px solid darkgray;
+                                              color: darkgray;
+                                              border-left-width: 10px;
+                                              border-right-width: 10px;">
+
+                                    </a>
+                                </div>
+
+
+                            {% endblock %}
+{#							<!-- Section -->#}
+{#								<section>#}
+{#									<header class="major">#}
+{#										<h2>Erat lacinia</h2>#}
+{#									</header>#}
+{#									<div class="features">#}
+{#										<article>#}
+{#											<span class="icon fa-diamond"></span>#}
+{#											<div class="content">#}
+{#												<h3>Portitor ullamcorper</h3>#}
+{#												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											</div>#}
+{#										</article>#}
+{#										<article>#}
+{#											<span class="icon fa-paper-plane"></span>#}
+{#											<div class="content">#}
+{#												<h3>Sapien veroeros</h3>#}
+{#												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											</div>#}
+{#										</article>#}
+{#										<article>#}
+{#											<span class="icon fa-rocket"></span>#}
+{#											<div class="content">#}
+{#												<h3>Quam lorem ipsum</h3>#}
+{#												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											</div>#}
+{#										</article>#}
+{#										<article>#}
+{#											<span class="icon fa-signal"></span>#}
+{#											<div class="content">#}
+{#												<h3>Sed magna finibus</h3>#}
+{#												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											</div>#}
+{#										</article>#}
+{#									</div>#}
+{#								</section>#}
+{##}
+{#							<!-- Section -->#}
+{#								<section>#}
+{#									<header class="major">#}
+{#										<h2>Ipsum sed dolor</h2>#}
+{#									</header>#}
+{#									<div class="posts">#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic01.jpg" %}" alt="" /></a>#}
+{#											<h3>Interdum aenean</h3>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											<ul class="actions">#}
+{#												<li><a href="#" class="button">More</a></li>#}
+{#											</ul>#}
+{#										</article>#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic02.jpg" %}" alt="" /></a>#}
+{#											<h3>Nulla amet dolore</h3>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											<ul class="actions">#}
+{#												<li><a href="#" class="button">More</a></li>#}
+{#											</ul>#}
+{#										</article>#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic03.jpg" %}" alt="" /></a>#}
+{#											<h3>Tempus ullamcorper</h3>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											<ul class="actions">#}
+{#												<li><a href="#" class="button">More</a></li>#}
+{#											</ul>#}
+{#										</article>#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic04.jpg" %}" alt="" /></a>#}
+{#											<h3>Sed etiam facilis</h3>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											<ul class="actions">#}
+{#												<li><a href="#" class="button">More</a></li>#}
+{#											</ul>#}
+{#										</article>#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic05.jpg" %}" alt="" /></a>#}
+{#											<h3>Feugiat lorem aenean</h3>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											<ul class="actions">#}
+{#												<li><a href="#" class="button">More</a></li>#}
+{#											</ul>#}
+{#										</article>#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic06.jpg" %}" alt="" /></a>#}
+{#											<h3>Amet varius aliquam</h3>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#											<ul class="actions">#}
+{#												<li><a href="#" class="button">More</a></li>#}
+{#											</ul>#}
+{#										</article>#}
+{#									</div>#}
+{#								</section>#}
+
+{#						</div>#}
+{#					</div>#}
+{##}
+{#				<!-- Sidebar -->#}
+{#					<div id="sidebar">#}
+{#						<div class="inner">#}
+{##}
+{#							<!-- Search -->#}
+{#								<section id="search" class="alt">#}
+{#									<form method="post" action="#">#}
+{#										<input type="text" name="query" id="query" placeholder="Search" />#}
+{#									</form>#}
+{#								</section>#}
+{##}
+{#                                个人信息#}
+{#                                <div class="mini-posts">#}
+{#                                    <article>#}
+{#                                        <a href="#" class="image"><img src="{% static "blog_test/images/pic07.jpg" %}" alt="" /></a>#}
+{#                                        <p>这里是我的个人信息</p>#}
+{#                                    </article>#}
+{#                                </div>#}
+{#							<!-- Menu -->#}
+{#								<nav id="menu">#}
+{#									<header class="major">#}
+{#										<h2>Menu</h2>#}
+{#									</header>#}
+{#									<ul>#}
+{#										<li><a href="#">Homepage</a></li>#}
+{#										<li><a href="generic.html">Generic</a></li>#}
+{#										<li><a href="elements.html">Elements</a></li>#}
+{#										<li>#}
+{#											<span class="opener">Submenu</span>#}
+{#											<ul>#}
+{#												<li><a href="#">Lorem Dolor</a></li>#}
+{#												<li><a href="#">Ipsum Adipiscing</a></li>#}
+{#												<li><a href="#">Tempus Magna</a></li>#}
+{#												<li><a href="#">Feugiat Veroeros</a></li>#}
+{#											</ul>#}
+{#										</li>#}
+{#										<li><a href="#">Etiam Dolore</a></li>#}
+{#										<li><a href="#">Adipiscing</a></li>#}
+{#										<li>#}
+{#											<span class="opener">Another Submenu</span>#}
+{#											<ul>#}
+{#												<li><a href="#">Lorem Dolor</a></li>#}
+{#												<li><a href="#">Ipsum Adipiscing</a></li>#}
+{#												<li><a href="#">Tempus Magna</a></li>#}
+{#												<li><a href="#">Feugiat Veroeros</a></li>#}
+{#											</ul>#}
+{#										</li>#}
+{#										<li><a href="#">Maximus Erat</a></li>#}
+{#										<li><a href="#">Sapien Mauris</a></li>#}
+{#										<li><a href="#">Amet Lacinia</a></li>#}
+{#									</ul>#}
+{#								</nav>#}
+{##}
+{#							<!-- Section -->#}
+{#								<section>#}
+{#									<header class="major">#}
+{#										<h2>Ante interdum</h2>#}
+{#									</header>#}
+{#									<div class="mini-posts">#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic07.jpg" %}" alt="" /></a>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>#}
+{#										</article>#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic08.jpg" %}" alt="" /></a>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>#}
+{#										</article>#}
+{#										<article>#}
+{#											<a href="#" class="image"><img src="{% static "blog_test/images/pic09.jpg" %}" alt="" /></a>#}
+{#											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>#}
+{#										</article>#}
+{#									</div>#}
+{#									<ul class="actions">#}
+{#										<li><a href="#" class="button">More</a></li>#}
+{#									</ul>#}
+{#								</section>#}
+{##}
+{#							<!-- Section -->#}
+{#								<section>#}
+{#									<header class="major">#}
+{#										<h2>Get in touch</h2>#}
+{#									</header>#}
+{#									<p>Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>#}
+{#									<ul class="contact">#}
+{#										<li class="fa-envelope-o"><a href="#">information@untitled.tld</a></li>#}
+{#										<li class="fa-phone">(000) 000-0000</li>#}
+{#										<li class="fa-home">1234 Somewhere Road #8254<br />#}
+{#										Nashville, TN 00000-0000</li>#}
+{#									</ul>#}
+{#								</section>#}
+{##}
+{#							<!-- Footer -->#}
+{#								<footer id="footer">#}
+{#									<p class="copyright">&copy; Untitled. All rights reserved. Demo Images: <a href="https://unsplash.com">Unsplash</a>. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>#}
+{#								</footer>#}
+{##}
+{#						</div>#}
+{#					</div>#}
+{##}
+{#			</div>#}
+{##}
+{#		<!-- Scripts -->#}
+{#			<script src="{% static "blog_test/js/jquery.min.js" %}"></script>#}
+{#			<script src="{% static "blog_test/js/skel.min.js" %}"></script>#}
+{#			<script src="{% static "blog_test/js/util.js" %}"></script>#}
+{#			<!--[if lte IE 8]><script src="{% static "blog_test/js/ie/respond.min.js" %}"></script><![endif]-->#}
+{#			<script src="{% static "blog_test/js/main.js" %}"></script>#}
+{##}
+{#	</body>#}
+{#</html>#}

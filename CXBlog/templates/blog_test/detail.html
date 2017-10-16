@@ -1,0 +1,129 @@
+{% extends "blog_test/base.html" %}
+{% load blog_tags %}
+{#{% load markdown_deux_tags %}#}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+
+  <h1>{{ post.title }}</h1>
+    <font color="#a9a9a9"><a href="{% url "CXBlog:blog_test" %}" class="icon fa-tag"></a></font>
+
+    {% for tag in post.tags.all %}
+{#                                                   <a class="button icon fa-tag " href="{% url "CXBlog:post_list_by_tag" tag.slug %}">#}
+{#                                                      {{ tag.name }}#}
+{#                                                    </a>#}
+        <a class="icon" href="{% url "CXBlog:post_list_by_tag" tag.slug %}">
+            <font color="black">{{ tag.name }}</font>
+        </a>
+        {% if not forloop.last %}<font color="black">| </font>{% endif %}
+    {% endfor %}
+    <br/>
+    <br/>
+  <p class="icons">
+      <span class="icon fa-calendar">&#8197;Published {{ post.publish }} by {{ post.author }}</span>
+  </p>
+    <div style="padding: 8px; border: 1px solid lightgray; background: #f5f6f7;
+                -moz-border-radius: 11px;-khtml-border-radius: 11px;
+                -webkit-border-radius: 11px;border-radius: 11px;">
+
+     {{ post.body|markdown }}
+    </div>
+{#  {{ post.body|linebreaks }}#}
+{#   作者 时间#}
+    <p class="icons">
+        <b class="icon fa-calendar" style="float: right">&#8197;{{ post.publish }}</b>
+        <b class="icon fa-pencil">&#8197;{{ post.author }}</b>
+    </p>
+    {#    发送邮件#}
+    <p class="icons">
+        <a class="icon fa-envelope"  href="{% url "CXBlog:post_share" post.id %}">
+            Share this post
+        </a>
+    </p>
+{#    类似的帖子#}
+    <div style="padding: 8px; border: 1px solid #f5f6f7; background: #f5f6f7;
+                -moz-border-radius: 11px;-khtml-border-radius: 11px;
+                -webkit-border-radius: 11px;border-radius: 11px;">
+    <h2>Similar posts</h2>
+    <ul>
+  {% for post in similar_posts %}
+    <li>
+      <a  class="icon" href="{{ post.get_absolute_url }}"><font size="4px">{{ post.title }}</font></a>
+    </li>
+  {% empty %}
+    There are no similar posts yet.
+  {% endfor %}
+    </ul>
+    </div>
+    <br/>
+{#    评论#}<div style="padding: 8px; border: 1px solid #f5f6f7; background: #f5f6f7;
+                -moz-border-radius: 11px;-khtml-border-radius: 11px;
+                -webkit-border-radius: 11px;border-radius: 11px;">
+            {% with comments.count as total_comments %}
+                <h2>
+                    {{ total_comments }} comment{{ total_comments|pluralize }}
+                </h2>
+            {% endwith %}
+            {% for comment in comments %}
+
+  <div class="comment" >
+    <p class="info">
+      Comment {{ forloop.counter }} by {{ comment.name }}
+      {{ comment.created }}
+    </p>
+    {{ comment.body|linebreaks }}
+  </div>
+
+    {% empty %}
+     <p>There are no comments yet.</p>
+    {% endfor %}
+</div>
+     <hr class="major">
+    <div style="padding: 8px; border: 1px solid #f5f6f7; background: #f5f6f7;
+                -moz-border-radius: 11px;-khtml-border-radius: 11px;
+                -webkit-border-radius: 11px;border-radius: 11px;">
+    {% if new_comment %}
+      <h2>Your comment has been added.</h2>
+    {% else %}
+      <h2>Add a new comment</h2>
+      <form action="." method="post">
+        {{ comment_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Add comment"></p>
+      </form>
+    {% endif %}
+    </div>
+
+    <div class="go-top">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+    </div>
+
+{#<div >#}
+{#    <a id="go-top" href="javascript:window.scrollTo(0,0)" class="icon fa-arrow-up" title="回顶部"#}
+{#       style="position: fixed;#}
+{#              bottom: 10px;#}
+{#              left: 93%;#}
+{#              margin-left: 40px;#}
+{#              color: black;#}
+{#              border:2px solid darkgray;#}
+{#              color: darkgray;#}
+{#              border-left-width: 10px;#}
+{#              border-right-width: 10px;"></a>#}
+{#</div>#}
+{##}
+        <a href="{% url "CXBlog:blog_test" %}" class="icon fa-home" title="主页"
+           style="position: fixed;
+                  bottom: 50px;
+                  left: 94%;
+                  margin-left: 40px;
+                  border:2px solid darkgray;
+                  color: darkgray;
+                  border-left-width: 10px;
+                  border-right-width: 10px;">
+
+        </a>
+
+{% endblock %}
+
+

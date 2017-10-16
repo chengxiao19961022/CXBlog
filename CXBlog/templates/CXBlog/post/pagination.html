@@ -1,0 +1,36 @@
+{#<div class="pagination">#}
+{#  <span class="step-links">#}
+{#    {% if page.has_previous %}#}
+{#      <a href="?page={{ page.previous_page_number }}">Previous</a>#}
+{#    {% endif %}#}
+{#    <span class="current">#}
+{#      Page {{ page.number }} of {{ page.paginator.num_pages }}.#}
+{#    </span>#}
+{#      {% if page.has_next %}#}
+{#        <a href="?page={{ page.next_page_number }}">Next</a>#}
+{#      {% endif %}#}
+{#  </span>#}
+{#</div>#}
+<div class="6u 12u$(small)">
+    <ul class="pagination">
+
+        {% if page.has_previous %}
+            <li><a href="?page={{ page.previous_page_number }}" class="button">Prev</a></li>
+            {% else %}
+            <li><span class="button disabled">Prev</span>
+        {% endif %}
+{#        <span class="current">#}
+{#          Page {{ page.number }} of {{ page.paginator.num_pages }}.#}
+{#        </span>#}
+{#        {% for i in range(page.paginator.num_pages) %}#}
+{##}
+{##}
+{#        {% endfor %}#}
+          {% if page.has_next %}
+              <li><a class="button" href="?page={{ page.next_page_number }}">Next</a></li>
+              {% else %}
+              <li><span class="button disabled">Next</span>
+          {% endif %}
+
+    </ul>
+</div>
